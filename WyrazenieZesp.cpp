@@ -6,7 +6,4 @@
  * w pliku naglowkowym.
  */
 
-void Wyswietl(LZespolona lzesp)
-{
-    cout<<"("<<lzesp.re<<std::showpos<<" "<<lzesp.im<<")"<<std::noshowpos<<endl;
-}
+

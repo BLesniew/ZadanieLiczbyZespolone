@@ -52,6 +52,17 @@ int main()
     Wyswietl(liczba2);
     LZespolona liczba3 = liczba1+liczba2;
     Wyswietl(liczba3);
+    liczba3 = liczba1-liczba2;
+    Wyswietl(liczba3);
+    liczba3 = liczba1*liczba2;
+    Wyswietl(liczba3);
+    liczba3 = liczba1/liczba2;
+    Wyswietl(liczba3);
+    Wyswietl(liczba3*liczba2);
+    Statystyka Stat;
+    Stat.lDobrychOdpowiedzi=5;
+    Stat.lWszystkichOdpowiedzi=7;
+    Wyswietl(Stat);
 
 return 0;
 }

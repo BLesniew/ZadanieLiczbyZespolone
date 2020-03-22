@@ -3,6 +3,7 @@
 
 
 #include "WyrazenieZesp.hh"
+#include "Statystyka.hh"
 
 
 /*
