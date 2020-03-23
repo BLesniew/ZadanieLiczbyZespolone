@@ -28,9 +28,10 @@ struct WyrazenieZesp {
  *
  */
 
-
-void Wyswietl(WyrazenieZesp  WyrZ);
-void Wyswietl(LZespolona lzesp);
+std::istream &operator >> (std::istream &strm, WyrazenieZesp &WZ); //wczytywanie wyrazenia zespolonego ze strumienia
+std::ostream &operator << (std::ostream &strm, WyrazenieZesp &WZ); //Zapisywanie wyrazenia zespolonego do strumienia
+std::istream &operator >> (std::istream &strm, Operator &Op);      //Wczytywanie operatora ze strumienia
+std::ostream &operator << (std::ostream &strm, Operator Op);
 LZespolona Oblicz(WyrazenieZesp  WyrZ);
 
 #endif

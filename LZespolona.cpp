@@ -59,9 +59,51 @@ LZespolona operator / (LZespolona number, double re)
     return Wynik;
 }
 
+bool operator == (LZespolona Skl1, LZespolona Skl2)
+{
+    if(Skl1.re==Skl2.re&&Skl1.im==Skl2.im)
+        return true;
+    else
+        return false;
+}
+
+bool operator !=(LZespolona Skl1, LZespolona Skl2)
+{
+    if(Skl1==Skl2)
+        return false;
+    else
+        return true;
+}
+
 double Modul(LZespolona number)
 {
     return sqrt(number.im*number.im+number.re*number.re);
+}
+
+std::istream &operator >> (std::istream &strm, LZespolona &lzesp)
+{
+    char znak;
+    std::cin>>znak;
+    if(znak!='(')
+        return strm;                                   //bledny format
+    strm >> lzesp.re;
+    strm >> lzesp.im;
+
+    std::cin>>znak;
+    if(znak!='i')
+        return strm;                                     //bledny format
+
+    std::cin>>znak;
+    if(znak!=')')
+        return strm;                                       //bledny format
+
+    return strm;                                         //a tu juz poprawny
+}
+
+std::ostream &operator << (std::ostream &strm, LZespolona lzesp)
+{
+    strm<<'('<<lzesp.re<<std::showpos<<lzesp.im<<"i)"<<std::noshowpos<<std::endl;
+    return strm;
 }
 
 LZespolona Utworz(double re, double im)
