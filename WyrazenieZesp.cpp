@@ -29,7 +29,7 @@ std::istream &operator >> (std::istream &strm, Operator &Op)
         break;
 
         default:
-                                                                          //zepsuj strumień failbit
+        strm.setstate(std::ios::failbit);
         break;
     }
     return strm;
@@ -55,7 +55,7 @@ std::ostream &operator << (std::ostream &strm, Operator Op)
         strm << '/';
         break;
 
-        default:                                 //czy trzeba coś więcej?
+        default:
         break;
 
     }
@@ -66,21 +66,55 @@ std::istream &operator >> (std::istream &strm, WyrazenieZesp &WZ)
 {
     strm>>WZ.Arg1;
     if(strm.fail())
+    {
+        cout<<"Wczytywanie wyrazenia nie powiodlo sie, niepoprawny format\n";
+        strm.clear();
         return strm;
+    }
+
     strm>>WZ.Op;
     if(strm.fail())
+    {
+        cout<<"Wczytywanie wyrazenia nie powiodlo sie, niepoprawny format\n";
+        strm.clear();
         return strm;
+    }
     strm>>WZ.Arg2;
+    if(strm.fail())
+    {
+        cout<<"Wczytywanie wyrazenia nie powiodlo sie, niepoprawny format\n";
+        strm.clear();
+    }
     return strm;
 }
 
-std::ostream &operator << (std::ostream &strm, WyrazenieZesp WZ)
+std::ostream &operator << (std::ostream &strm, WyrazenieZesp &WZ)
 {
-    strm<<WZ.Arg1<<WZ.Op<<WZ.Arg2<<std::endl;
+    strm<<WZ.Arg1<<WZ.Op<<WZ.Arg2;
     return strm;
 }
 
 LZespolona Oblicz(WyrazenieZesp  WyrZ)
 {
+    switch(WyrZ.Op)
+    {
+        case Op_Dodaj:
+        return WyrZ.Arg1+WyrZ.Arg2;
+        break;
 
+        case Op_Odejmij:
+        return WyrZ.Arg1-WyrZ.Arg2;
+        break;
+
+        case Op_Mnoz:
+        return WyrZ.Arg1*WyrZ.Arg2;
+        break;
+
+        case Op_Dziel:
+        return WyrZ.Arg1/WyrZ.Arg2;
+        break;
+
+        default:
+        break;
+    }
 }

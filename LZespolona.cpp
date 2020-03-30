@@ -1,5 +1,5 @@
 #include "LZespolona.hh"
-
+#include<limits>
 
 
 /*!
@@ -43,8 +43,13 @@ LZespolona  operator * (LZespolona  Skl1,  LZespolona  Skl2)
 LZespolona  operator / (LZespolona  Skl1,  LZespolona  Skl2)
 {
   LZespolona  Wynik;
-
-  Wynik=Skl1*Sprzezenie(Skl2)/(Modul(Skl2)*Modul(Skl2));
+  if(Skl2.re==0&&Skl2.im==0)                                      //wyjątek gdy dzielimy przez (0+0i); nan - not a number
+  {
+    Wynik.im=std::numeric_limits<double>::quiet_NaN();
+    Wynik.re=std::numeric_limits<double>::quiet_NaN();
+  }
+  else
+    Wynik=Skl1*Sprzezenie(Skl2)/(Modul(Skl2)*Modul(Skl2));
 
   return Wynik;
 }
@@ -69,10 +74,7 @@ bool operator == (LZespolona Skl1, LZespolona Skl2)
 
 bool operator !=(LZespolona Skl1, LZespolona Skl2)
 {
-    if(Skl1==Skl2)
-        return false;
-    else
-        return true;
+    return !(Skl1==Skl2);
 }
 
 double Modul(LZespolona number)
@@ -80,29 +82,34 @@ double Modul(LZespolona number)
     return sqrt(number.im*number.im+number.re*number.re);
 }
 
-std::istream &operator >> (std::istream &strm, LZespolona &lzesp)
+std::istream &operator >> (std::istream &strm, LZespolona &lzesp)  //przyjmuje tylko liczby w formacie "(a+bi)"
 {
     char znak;
     std::cin>>znak;
     if(znak!='(')
-        return strm;                                   //bledny format
+    {
+        strm.setstate(std::ios::failbit);
+        return strm;
+    }
+
     strm >> lzesp.re;
     strm >> lzesp.im;
 
     std::cin>>znak;
     if(znak!='i')
-        return strm;                                     //bledny format
-
+    {
+        strm.setstate(std::ios::failbit);
+        return strm;
+    }
     std::cin>>znak;
     if(znak!=')')
-        return strm;                                       //bledny format
-
-    return strm;                                         //a tu juz poprawny
+        strm.setstate(std::ios::failbit);
+    return strm;
 }
 
 std::ostream &operator << (std::ostream &strm, LZespolona lzesp)
 {
-    strm<<'('<<lzesp.re<<std::showpos<<lzesp.im<<"i)"<<std::noshowpos<<std::endl;
+    strm<<'('<<lzesp.re<<std::showpos<<lzesp.im<<"i)"<<std::noshowpos;
     return strm;
 }
 
@@ -124,9 +131,4 @@ LZespolona Sprzezenie(LZespolona lzesp)
     Wynik.im=-lzesp.im;
 
     return Wynik;
-}
-
-void Wyswietl(LZespolona lzesp)
-{
-    cout<<"("<<lzesp.re<<std::showpos<<lzesp.im<<"i)"<<std::noshowpos<<std::endl;
 }

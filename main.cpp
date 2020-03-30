@@ -1,68 +1,62 @@
-#include <iostream>
 #include "BazaTestu.hh"
-
-
-
-
-/*int main(int argc, char **argv)
-{
-
-  if (argc < 2) {
-    cout << endl;
-    cout << " Brak opcji okreslajacej rodzaj testu." << endl;
-    cout << " Dopuszczalne nazwy to:  latwy, trudny." << endl;
-    cout << endl;
-    return 1;
-  }
-
-
-  BazaTestu   BazaT = { nullptr, 0, 0 };
-
-  if (InicjalizujTest(&BazaT,argv[1]) == false) {
-    cerr << " Inicjalizacja testu nie powiodla sie." << endl;
-    return 1;
-  }
-
-
-
-  cout << endl;
-  cout << " Start testu arytmetyki zespolonej: " << argv[1] << endl;
-  cout << endl;
-
-  WyrazenieZesp   WyrZ_PytanieTestowe;
-
-  while (PobierzNastpnePytanie(&BazaT,&WyrZ_PytanieTestowe)) {
-    cout << " Czesc rzeczywista pierwszego argumentu: ";
-    cout << WyrZ_PytanieTestowe.Arg1.re << endl;
-  }
-
-
-  cout << endl;
-  cout << " Koniec testu" << endl;
-  cout << endl;
-
-}
-*/
 
 int main()
 {
-    LZespolona liczba1 = Utworz(2,3);
-    Wyswietl(liczba1);
-    LZespolona liczba2 = Utworz(3,-2);
-    Wyswietl(liczba2);
-    LZespolona liczba3 = liczba1+liczba2;
-    Wyswietl(liczba3);
-    liczba3 = liczba1-liczba2;
-    Wyswietl(liczba3);
-    liczba3 = liczba1*liczba2;
-    Wyswietl(liczba3);
-    liczba3 = liczba1/liczba2;
-    Wyswietl(liczba3);
-    Wyswietl(liczba3*liczba2);
-    Statystyka Stat;
-    Stat.lDobrychOdpowiedzi=5;
-    Stat.lWszystkichOdpowiedzi=7;
-    Wyswietl(Stat);
+    BazaTestu baza;
+    LZespolona odpowiedz;
+    Statystyka stat;
+    WyrazenieZesp pytanie;
+    char wyborTrudnosci[1000];
+    int iloscProb;                              //proby wpisania wyniku w odpowiednim formacie
+    bool czyWyjsc=false;                        //pomocniczy warunek do..while
+
+
+    cout<<"Wybierz trudnosc - wpisz 'latwy' lub 'trudny'\n";
+    std::cin>>wyborTrudnosci;
+
+    InicjalizujTest(&baza,wyborTrudnosci);
+    pytanie = *baza.wskTabTestu;
+
+    for(int i=0;i<baza.IloscPytan;i++)
+    {
+        iloscProb=0;
+        if(!PobierzNastpnePytanie(&baza,&pytanie))
+            return 1;
+        cout<<baza.IndeksPytania<<") "<<pytanie<<std::endl;
+
+        do
+        {
+        std::cin>>odpowiedz;
+        if(std::cin.fail())
+        {
+            czyWyjsc=false;
+            std::cin.clear();
+            while(std::cin.get()!='\n');
+                //std::cin.ignore();
+            cout<<"Bledny format, poprawny format to '(a+bi)'\n";
+            if(iloscProb<2)
+                cout<<"Sproboj ponownie, pozostale proby: "<<2-iloscProb<<"\n";
+        }
+        else
+            czyWyjsc=true;
+        iloscProb++;
+        }
+        while(iloscProb<3&&!czyWyjsc);
+        if(odpowiedz==Oblicz(pytanie))
+        {
+            dodajPoprawnaOdp(stat);
+            cout<<"Odpowiedz poprawna\n";
+        }
+        else
+        {
+            dodajBlednaOdp(stat);
+            cout<<"Odpowiedz bledna, poprawna odpowiedz to "<<Oblicz(pytanie)<<std::endl;
+        }
+
+    }
+    Wyswietl(stat);
+
+
 
 return 0;
 }

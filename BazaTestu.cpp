@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <cassert>
+#include <fstream>
 #include "BazaTestu.hh"
 
 using namespace std;
@@ -14,6 +15,14 @@ static WyrazenieZesp  TestLatwy[] =
     {{1,0}, Op_Odejmij, {0,1}},
     {{3,0}, Op_Mnoz, {0,3}},
     {{4,8}, Op_Dziel, {1,0}},
+  };
+
+  static WyrazenieZesp TestTrudny[] =
+  {
+    {{2.7,3},Op_Dodaj,{2,3.3}},
+    {{3,7}, Op_Odejmij, {11.5,3.3}},
+    {{3,-4}, Op_Mnoz, {-4,2}},
+    {{18,-6}, Op_Dziel, {4,2}},
   };
 
 /*
@@ -33,7 +42,7 @@ static WyrazenieZesp  TestLatwy[] =
  *    wskTabTestu  - wskaznik na tablice zawierajaca wyrazenia arytmetyczne
  *                   bedace przedmiotem testu,
  *    IloscElemTab - ilosc pytan w tablicy.
- *   
+ *
  * Warunki wstepne:
  *      - Parametr wskBazaTestu nie moze byc pustym wskaznikiem. Musi zawierac adres
  *        zmiennej reprezentujacej baze testu, ktora wczesniej zostal poprawnie
@@ -54,7 +63,7 @@ void UstawTest( BazaTestu *wskBazaTestu, WyrazenieZesp *wskTabTestu, unsigned in
 
 /*
  * Inicjalizuje test kojarzac zmienna dostepna poprzez wskaznik wskBazaTestu
- * z dana tablica wyrazen, ktora reprezentuje jeden z dwoch dopuszczalnych 
+ * z dana tablica wyrazen, ktora reprezentuje jeden z dwoch dopuszczalnych
  * testow.
  * Parametry:
  *    wskBazaTestu - wskaznik na zmienna reprezentujaca baze testu.
@@ -65,7 +74,7 @@ void UstawTest( BazaTestu *wskBazaTestu, WyrazenieZesp *wskTabTestu, unsigned in
  *        zmiennej reprezentujacej baze testu, ktora wczesniej zostal poprawnie
  *        zainicjalizowany poprzez wywolanie funkcji InicjalizujTest.
  *      - Parametr sNazwaTestu musi wskazywac na jedna z nazw tzn. "latwe" lub "trudne".
- *       
+ *
  * Zwraca:
  *       true - gdy operacja sie powiedzie i test zostanie poprawnie
  *              zainicjalizowany,
@@ -73,13 +82,16 @@ void UstawTest( BazaTestu *wskBazaTestu, WyrazenieZesp *wskTabTestu, unsigned in
  */
 bool InicjalizujTest( BazaTestu  *wskBazaTestu, const char *sNazwaTestu )
 {
-  if (!strcmp(sNazwaTestu,"latwy")) {
+  if (!strcmp(sNazwaTestu,"latwy"))
+  {
     UstawTest(wskBazaTestu,TestLatwy,sizeof(TestLatwy)/sizeof(WyrazenieZesp));
     return true;
   }
-  /*
-   * Analogicznie zrob inicjalizacje dla testu trudne
-   */
+  else if(!strcmp(sNazwaTestu,"trudny"))
+  {
+    UstawTest(wskBazaTestu,TestTrudny,sizeof(TestTrudny)/sizeof(WyrazenieZesp));
+    return true;
+  }
 
   cerr << "Otwarcie testu '" << sNazwaTestu << "' nie powiodlo sie." << endl;
   return false;
@@ -114,3 +126,4 @@ bool PobierzNastpnePytanie( BazaTestu  *wskBazaTestu, WyrazenieZesp *wskWyrazeni
   ++wskBazaTestu->IndeksPytania;
   return true;
 }
+
